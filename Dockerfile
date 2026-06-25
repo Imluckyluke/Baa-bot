@@ -2,7 +2,6 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-COPY pyproject.toml .
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pip install --no-cache-dir \
     "aiogram==3.13.1" \
@@ -11,8 +10,7 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     "alembic==1.14.0" \
     "redis[hiredis]==5.2.1" \
     "pydantic-settings==2.6.1" \
-    "apscheduler==3.10.4" \
-    "aiohttp==3.11.7"
+    "apscheduler==3.10.4"
 
 COPY bot/ bot/
 COPY alembic.ini .
