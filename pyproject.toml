@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "baabot"
+version = "1.0.0"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram==3.13.1",
+    "sqlalchemy[asyncio]==2.0.36",
+    "asyncpg==0.30.0",
+    "alembic==1.14.0",
+    "redis[hiredis]==5.2.1",
+    "pydantic-settings==2.6.1",
+    "apscheduler==3.10.4",
+    "uvicorn==0.32.1",
+    "aiohttp==3.11.7",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bot*"]

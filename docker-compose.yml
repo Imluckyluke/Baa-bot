@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    restart: always
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: baabot
+      POSTGRES_USER: baabot
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-baabot}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "baabot"]
+      interval: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+
+volumes:
+  pgdata:
+  redisdata:
