@@ -1,6 +1,5 @@
 import asyncio
 import os
-from logging.config import fileConfig
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
@@ -10,7 +9,6 @@ from bot.models import Base  # noqa: F401
 
 config = context.config
 
-# مستقیم از environment بخون، بدون نیاز به settings
 db_url = os.environ.get("DATABASE_URL", "")
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
@@ -18,9 +16,6 @@ elif db_url.startswith("postgresql://") and "+asyncpg" not in db_url:
     db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
 config.set_main_option("sqlalchemy.url", db_url)
-
-if config.config_file_name is not None:
-    fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
 
