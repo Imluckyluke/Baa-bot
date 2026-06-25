@@ -8,11 +8,11 @@ class Settings(BaseSettings):
     BOT_TOKEN: str
     OPERATOR_IDS: List[int] = []
 
-    # Database - Railway Postgres plugin sets DATABASE_URL automatically
+    # Database
     DATABASE_URL: str = "postgresql+asyncpg://baabot:baabot@localhost:5432/baabot"
     DB_POOL_SIZE: int = 10
 
-    # Redis - Railway Redis plugin sets REDIS_URL automatically
+    # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # Game defaults
@@ -37,12 +37,13 @@ class Settings(BaseSettings):
     def parse_operator_ids(cls, v):
         if isinstance(v, str):
             return [int(x.strip()) for x in v.split(",") if x.strip()]
+        if isinstance(v, int):
+            return [v]
         return v
 
     @field_validator("DATABASE_URL", mode="before")
     @classmethod
     def fix_postgres_url(cls, v):
-        # Railway gives postgres:// but asyncpg needs postgresql+asyncpg://
         if isinstance(v, str):
             if v.startswith("postgres://"):
                 v = v.replace("postgres://", "postgresql+asyncpg://", 1)
